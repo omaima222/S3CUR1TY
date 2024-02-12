@@ -2,6 +2,7 @@ package com.example.securityproject.controllers;
 
 import com.example.securityproject.dto.user.AuthenticateDto;
 import com.example.securityproject.dto.user.RegisterDto;
+import com.example.securityproject.dto.user.MessageDto;
 import com.example.securityproject.services.UserService;
 import jakarta.validation.Valid;
 import jakarta.validation.ValidationException;
@@ -17,13 +18,13 @@ public class authController {
     private final UserService userService;
 
     @PostMapping("register")
-    public ResponseEntity<String> register(@Valid @RequestBody RegisterDto registerDto) throws ValidationException{
-        return ResponseEntity.ok(userService.register(registerDto));
+    public ResponseEntity<MessageDto> register(@Valid @RequestBody RegisterDto registerDto) throws ValidationException{
+        return ResponseEntity.ok(new MessageDto(userService.register(registerDto)));
     }
 
 
     @PostMapping("authenticate")
-    public ResponseEntity<String> authenticate(@Valid @RequestBody AuthenticateDto authenticateDto){
-        return ResponseEntity.ok(userService.authenticate(authenticateDto));
+    public ResponseEntity<MessageDto> authenticate(@Valid @RequestBody AuthenticateDto authenticateDto){
+        return ResponseEntity.ok(new MessageDto(userService.authenticate(authenticateDto)));
     }
 }
