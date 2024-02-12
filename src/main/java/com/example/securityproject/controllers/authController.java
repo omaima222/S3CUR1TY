@@ -19,12 +19,12 @@ public class authController {
 
     @PostMapping("register")
     public ResponseEntity<MessageDto> register(@Valid @RequestBody RegisterDto registerDto) throws ValidationException{
-        return ResponseEntity.ok(new MessageDto(userService.register(registerDto)));
+        return ResponseEntity.ok(userService.register(registerDto));
     }
 
 
     @PostMapping("authenticate")
     public ResponseEntity<MessageDto> authenticate(@Valid @RequestBody AuthenticateDto authenticateDto){
-        return ResponseEntity.ok(new MessageDto(userService.authenticate(authenticateDto)));
+        return ResponseEntity.ok(userService.authenticate(authenticateDto));
     }
 }

@@ -3,6 +3,7 @@ package com.example.securityproject.services;
 import com.example.securityproject.Entity.User;
 import com.example.securityproject.config.JwtService;
 import com.example.securityproject.dto.user.AuthenticateDto;
+import com.example.securityproject.dto.user.MessageDto;
 import com.example.securityproject.dto.user.RegisterDto;
 import com.example.securityproject.enums.Role;
 import com.example.securityproject.repositories.UserRepository;
@@ -11,6 +12,8 @@ import jakarta.validation.ValidationException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import java.util.Optional;
@@ -29,7 +32,7 @@ public class UserService {
         if(user==null) throw new EntityNotFoundException("user not found !");
         return user;
     }
-    public String register(RegisterDto registerDto) throws ValidationException {
+    public MessageDto register(RegisterDto registerDto) throws ValidationException {
         Optional<User> existingUser = this.userRepository.findByUsername(registerDto.getUsername());
         if(existingUser.isPresent()) throw new ValidationException("This username already exists !");
         User user = User.builder()
@@ -40,16 +43,21 @@ public class UserService {
                 .build();
         this.userRepository.save(user);
         String token = jwtService.generateToken(user);
-        return token;
+        return new MessageDto(token);
     }
-
-    public String authenticate(AuthenticateDto authenticateDto){
+    public MessageDto authenticate(AuthenticateDto authenticateDto){
         this.authenticationManager.authenticate(
            new UsernamePasswordAuthenticationToken(authenticateDto.getUsername(), authenticateDto.getPassword())
         );
         User user = this.findUserByUsername(authenticateDto.getUsername());
         String token = jwtService.generateToken(user);
-        return token;
+        return new MessageDto(token);
+    }
+
+    public MessageDto welcome(){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();
+        return new MessageDto("\uD83D\uDC4B  Welcome '"+username+"'  \uD83D\uDC4B");
     }
 
 }
