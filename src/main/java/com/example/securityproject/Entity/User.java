@@ -1,14 +1,13 @@
 package com.example.securityproject.Entity;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import com.example.securityproject.enums.Role;
+
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 @Data
@@ -23,11 +22,17 @@ public class User implements UserDetails {
     private String username;
     private String email;
     private String password;
+    @ManyToOne()
     private Role role;
 
+    @OneToMany(mappedBy = "user")
+    private List<Comment> comments;
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(new SimpleGrantedAuthority(role.name()));
+        List<SimpleGrantedAuthority> authorities = new ArrayList<>();
+        authorities.add(new SimpleGrantedAuthority("ROLE_"+role.getName()));
+        role.getPermissions().stream().forEach(p->new SimpleGrantedAuthority(p.getName()));
+        return authorities;
     }
 
     @Override

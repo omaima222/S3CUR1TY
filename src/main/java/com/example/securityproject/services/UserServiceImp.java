@@ -3,10 +3,11 @@ package com.example.securityproject.services;
 import com.example.securityproject.Entity.User;
 import com.example.securityproject.config.JwtService;
 import com.example.securityproject.dto.user.AuthenticateDto;
-import com.example.securityproject.dto.user.MessageDto;
+import com.example.securityproject.dto.MessageDto;
 import com.example.securityproject.dto.user.RegisterDto;
-import com.example.securityproject.enums.Role;
+import com.example.securityproject.repositories.RoleRepository;
 import com.example.securityproject.repositories.UserRepository;
+import com.example.securityproject.services.interfaces.UserService;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.ValidationException;
 import lombok.RequiredArgsConstructor;
@@ -20,9 +21,10 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
-public class UserService {
+public class UserServiceImp implements UserService {
 
     private final UserRepository userRepository;
+    private final RoleRepository roleRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
@@ -38,7 +40,7 @@ public class UserService {
         User user = User.builder()
                 .username(registerDto.getUsername())
                 .email(registerDto.getEmail())
-                .role(Role.USER)
+                .role(this.roleRepository.findRoleByName("USER"))
                 .password(passwordEncoder.encode(registerDto.getPassword()))
                 .build();
         this.userRepository.save(user);
@@ -53,7 +55,6 @@ public class UserService {
         String token = jwtService.generateToken(user);
         return new MessageDto(token);
     }
-
     public MessageDto welcome(){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String username = authentication.getName();

@@ -2,8 +2,8 @@ package com.example.securityproject.controllers;
 
 import com.example.securityproject.dto.user.AuthenticateDto;
 import com.example.securityproject.dto.user.RegisterDto;
-import com.example.securityproject.dto.user.MessageDto;
-import com.example.securityproject.services.UserService;
+import com.example.securityproject.dto.MessageDto;
+import com.example.securityproject.services.interfaces.UserService;
 import jakarta.validation.Valid;
 import jakarta.validation.ValidationException;
 import lombok.RequiredArgsConstructor;

@@ -1,6 +1,5 @@
 package com.example.securityproject.dto.user;
 
-import com.example.securityproject.enums.Role;
 import jakarta.validation.constraints.*;
 import lombok.Data;
 

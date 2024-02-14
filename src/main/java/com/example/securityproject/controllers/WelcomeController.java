@@ -1,8 +1,8 @@
 package com.example.securityproject.controllers;
 
 
-import com.example.securityproject.dto.user.MessageDto;
-import com.example.securityproject.services.UserService;
+import com.example.securityproject.dto.MessageDto;
+import com.example.securityproject.services.interfaces.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,4 +19,5 @@ public class WelcomeController {
     public ResponseEntity<MessageDto> welcome(){
         return ResponseEntity.ok(this.userService.welcome());
     }
+
 }
